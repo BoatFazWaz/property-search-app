@@ -16,6 +16,13 @@ services:
     environment:
       - NODE_ENV=development
       - NEXT_PUBLIC_API_URL=http://localhost:4000/api
+    command: >
+      sh -c "
+        if [ ! -f pnpm-lock.yaml ]; then
+          pnpm install
+        fi
+        pnpm run dev
+      "
 
   backend:
     build:
@@ -40,7 +47,13 @@ services:
       - REDIS_URL=redis://redis:6379
       - ELASTICSEARCH_URL=http://elasticsearch:9200
       - JWT_SECRET=your-secret-jwt-key-change-in-production
-    command: sh -c "npx prisma migrate deploy && npm run dev"
+    command: >
+      sh -c "
+        if [ ! -f pnpm-lock.yaml ]; then
+          pnpm install
+        fi
+        pnpm exec prisma migrate deploy && pnpm run dev
+      "
 
   db:
     image: mysql:8.0

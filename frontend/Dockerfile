@@ -1,16 +1,19 @@
 # Base Node.js image
 FROM node:23 AS base
 
+# Install pnpm
+RUN npm install -g pnpm@10.8.1
+
 # Install dependencies only when needed
 FROM base AS deps
 WORKDIR /app
 
 # Copy package files
-COPY package.json package-lock.json* ./
+COPY package.json pnpm-lock.yaml* ./
 COPY next.config.js ./
 
 # Install dependencies
-RUN npm ci
+RUN pnpm install
 
 # Development image
 FROM base AS development
@@ -25,7 +28,7 @@ COPY . .
 EXPOSE 3000
 
 # Start development server
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "run", "dev"]
 
 # Production builder image
 FROM base AS builder
@@ -36,7 +39,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build application
-RUN npm run build
+RUN pnpm run build
 
 # Production image
 FROM base AS production
