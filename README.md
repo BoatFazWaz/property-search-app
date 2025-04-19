@@ -106,6 +106,35 @@ property-search-app/
 └── docker-compose.yml      # Docker Compose configuration
 ```
 
+## Troubleshooting
+
+### Common Issues
+
+1. **Docker build failing for backend:**
+   - Ensure all dependencies are correctly listed in package.json
+   - Try removing the node_modules volume and rebuilding: `docker-compose down -v && docker-compose up --build`
+
+2. **Database connection issues:**
+   - Check if MySQL is running: `docker-compose ps`
+   - Verify database credentials in .env match docker-compose.yml
+   - Wait for database to fully initialize (can take up to a minute)
+
+3. **TypeScript errors:**
+   - Run `docker-compose exec backend sh -c "npm install --save-dev @types/node @types/express"`
+   - Check tsconfig.json for proper configuration
+
+4. **Prisma migration errors:**
+   - Manually run migrations: `docker-compose exec backend npx prisma migrate deploy`
+   - Reset database if needed: `docker-compose exec backend npx prisma migrate reset --force`
+
+### Fixing "npm ci" errors:
+If you encounter "npm ci" errors during build:
+
+```bash
+# Rebuild with clean cache
+docker-compose build --no-cache
+```
+
 ## Contributing
 
 1. Fork the repository

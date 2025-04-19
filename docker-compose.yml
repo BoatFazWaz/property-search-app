@@ -4,6 +4,7 @@ services:
   frontend:
     build:
       context: ./frontend
+      target: development
       dockerfile: Dockerfile
     volumes:
       - ./frontend:/app
@@ -19,6 +20,7 @@ services:
   backend:
     build:
       context: ./backend
+      target: development
       dockerfile: Dockerfile
     volumes:
       - ./backend:/app
@@ -26,14 +28,19 @@ services:
     ports:
       - "4000:4000"
     depends_on:
-      - db
-      - redis
-      - elasticsearch
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
     environment:
       - NODE_ENV=development
       - DATABASE_URL=mysql://user:password@db:3306/property_search
       - REDIS_URL=redis://redis:6379
       - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - JWT_SECRET=your-secret-jwt-key-change-in-production
+    command: sh -c "npx prisma migrate deploy && npm run dev"
 
   db:
     image: mysql:8.0
@@ -46,6 +53,11 @@ services:
       - MYSQL_PASSWORD=password
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-ppassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:alpine
@@ -53,6 +65,11 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
@@ -63,6 +80,11 @@ services:
       - "9200:9200"
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
 
 volumes:
   mysql_data:

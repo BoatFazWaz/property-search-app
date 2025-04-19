@@ -161,7 +161,7 @@ export class PropertyResolver {
       }
 
       // In a real application, this would use Elasticsearch
-      // For now, we'll do a simple search in the database
+      // For demonstration purposes, we'll do a simple search in the database
       const properties = await ctx.prisma.property.findMany({
         where: {
           OR: [

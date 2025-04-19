@@ -1,5 +1,5 @@
 # Base Node.js image
-FROM node:20-alpine AS base
+FROM node:23 AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -7,6 +7,7 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json* ./
+COPY next.config.js ./
 
 # Install dependencies
 RUN npm ci
@@ -17,6 +18,8 @@ WORKDIR /app
 
 # Copy dependencies
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/next.config.js ./next.config.js
+COPY . .
 
 # Expose port
 EXPOSE 3000
