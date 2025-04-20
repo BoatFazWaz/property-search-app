@@ -1,9 +1,9 @@
-import express from 'express';
+import express, { Router } from 'express';
 import { Octokit } from '@octokit/rest';
 import axios from 'axios';
 import { GithubCommit, WeatherData, DailyQuote } from '../types';
 
-const router = express.Router();
+const router: Router = express.Router();
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN
 });
