@@ -1,46 +1,44 @@
-FROM node:18-alpine AS base
+FROM node:23 AS base
 
 # This Dockerfile is copy-pasted into our main docs at /docs/handbook/deploying-with-docker.
 # Make sure you update both files!
 
 FROM base AS builder
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk update
-RUN apk add --no-cache libc6-compat
-# Set working directory
 WORKDIR /app
-RUN yarn global add turbo
+RUN corepack enable
+RUN npm install -g turbo
 COPY . .
 RUN turbo prune web --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
-RUN apk update
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
+
+# Install pnpm for this stage
+RUN corepack enable
 
 # First install the dependencies (as they change less often)
 COPY --from=builder /app/out/json/ .
-RUN yarn install
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # Build the project
 COPY --from=builder /app/out/full/ .
-
-# Uncomment and use build args to enable remote caching
-# ARG TURBO_TEAM
-# ENV TURBO_TEAM=$TURBO_TEAM
-
-# ARG TURBO_TOKEN
-# ENV TURBO_TOKEN=$TURBO_TOKEN
-
-RUN yarn turbo build
+RUN pnpm turbo build
 
 FROM base AS runner
 WORKDIR /app
 
+# Create the user and set up directories with correct permissions
+RUN groupadd --system --gid 1001 nodejs && \
+    useradd --system --uid 1001 nextjs --gid nodejs --create-home && \
+    mkdir -p /app /home/nextjs/.local/share/pnpm && \
+    chown -R nextjs:nodejs /app /home/nextjs
+
+# Set pnpm store directory
+ENV PNPM_HOME="/home/nextjs/.local/share/pnpm"
+ENV PATH="${PNPM_HOME}:${PATH}"
+
 # Don't run production as root
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
 # Automatically leverage output traces to reduce image size
@@ -49,4 +47,4 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 
-CMD node apps/web/server.js
+CMD ["node", "apps/web/server.js"]
