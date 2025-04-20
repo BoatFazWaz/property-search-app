@@ -25,6 +25,13 @@ module.exports = {
         project,
       },
     },
+    react: {
+      version: "detect"
+    }
+  },
+  rules: {
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-uses-react": "off"
   },
   ignorePatterns: [
     // Ignore dotfiles

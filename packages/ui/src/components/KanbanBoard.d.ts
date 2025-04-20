@@ -9,9 +9,20 @@ interface Column {
     title: string;
     tasks: Task[];
 }
+interface TaskMoveResult {
+    source: {
+        index: number;
+        droppableId: string;
+    };
+    destination: {
+        index: number;
+        droppableId: string;
+    };
+    draggableId: string;
+}
 interface KanbanBoardProps {
     initialColumns: Column[];
-    onTaskMove?: (result: any) => void;
+    onTaskMove?: (result: TaskMoveResult) => void;
 }
 export declare const KanbanBoard: React.FC<KanbanBoardProps>;
 export {};

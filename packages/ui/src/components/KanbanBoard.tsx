@@ -1,22 +1,17 @@
 import React, { useState } from 'react';
 import {
   DndContext,
-  DragOverlay,
   closestCorners,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  DragStartEvent,
   DragEndEvent,
 } from '@dnd-kit/core';
 import {
   arrayMove,
-  SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { SortableItem } from './SortableItem';
 import { Column } from './Column';
 
 interface Task {
@@ -30,14 +25,25 @@ interface Column {
   tasks: Task[];
 }
 
+interface TaskMoveResult {
+  source: {
+    index: number;
+    droppableId: string;
+  };
+  destination: {
+    index: number;
+    droppableId: string;
+  };
+  draggableId: string;
+}
+
 interface KanbanBoardProps {
   initialColumns: Column[];
-  onTaskMove?: (result: any) => void;
+  onTaskMove?: (result: TaskMoveResult) => void;
 }
 
 export const KanbanBoard: React.FC<KanbanBoardProps> = ({ initialColumns, onTaskMove }) => {
   const [columns, setColumns] = useState<Column[]>(initialColumns);
-  const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -46,9 +52,9 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ initialColumns, onTask
     })
   );
 
-  const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
-    setActiveId(active.id as string);
+  const handleDragStart = () => {
+    // We're not using activeId anymore, so we can remove this handler
+    // or keep it for future use
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -90,12 +96,11 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ initialColumns, onTask
       setColumns(newColumns);
     }
 
-    setActiveId(null);
     if (onTaskMove) {
       onTaskMove({
         source: { index: activeIndex, droppableId: columns[activeContainer].id },
         destination: { index: overIndex, droppableId: columns[overContainer].id },
-        draggableId: activeId,
+        draggableId: activeId as string,
       });
     }
   };

@@ -8,13 +8,12 @@ const sortable_1 = require("@dnd-kit/sortable");
 const Column_1 = require("./Column");
 const KanbanBoard = ({ initialColumns, onTaskMove }) => {
     const [columns, setColumns] = (0, react_1.useState)(initialColumns);
-    const [activeId, setActiveId] = (0, react_1.useState)(null);
     const sensors = (0, core_1.useSensors)((0, core_1.useSensor)(core_1.PointerSensor), (0, core_1.useSensor)(core_1.KeyboardSensor, {
         coordinateGetter: sortable_1.sortableKeyboardCoordinates,
     }));
-    const handleDragStart = (event) => {
-        const { active } = event;
-        setActiveId(active.id);
+    const handleDragStart = () => {
+        // We're not using activeId anymore, so we can remove this handler
+        // or keep it for future use
     };
     const handleDragEnd = (event) => {
         const { active, over } = event;
@@ -43,7 +42,6 @@ const KanbanBoard = ({ initialColumns, onTaskMove }) => {
             newColumns[overContainer].tasks.splice(overIndex, 0, movedTask);
             setColumns(newColumns);
         }
-        setActiveId(null);
         if (onTaskMove) {
             onTaskMove({
                 source: { index: activeIndex, droppableId: columns[activeContainer].id },

@@ -27,8 +27,8 @@ app.get('/health', (req, res) => {
 });
 
 // Error handling
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  logger.error(err.stack);
+app.use((err: Error, req: express.Request, res: express.Response) => {
+  logger.error(err.stack ?? err.message);
   res.status(500).json({ error: 'Something broke!' });
 });
 

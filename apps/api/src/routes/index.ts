@@ -3,6 +3,13 @@ import { Octokit } from '@octokit/rest';
 import axios from 'axios';
 import { GithubCommit, WeatherData, DailyQuote } from '../types';
 
+interface PushEventPayload {
+  commits: Array<{
+    sha: string;
+    message: string;
+  }>;
+}
+
 const router: Router = express.Router();
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN
@@ -24,18 +31,18 @@ router.get('/github/commits', async (req, res) => {
     const commits: GithubCommit[] = events.data
       .filter(event => event.type === 'PushEvent')
       .flatMap(event => {
-        const pushEvent = event.payload as any;
-        return pushEvent.commits.map((commit: any) => ({
+        const pushEvent = event.payload as PushEventPayload;
+        return pushEvent.commits.map(commit => ({
           sha: commit.sha,
           message: commit.message,
-          date: event.created_at,
+          date: event.created_at ?? new Date().toISOString(),
           author: event.actor.login,
           repo: event.repo.name
         }));
       });
 
     res.json(commits);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Failed to fetch GitHub commits' });
   }
 });
@@ -67,7 +74,7 @@ router.get('/github/issues', async (req, res) => {
     }));
 
     res.json(formattedIssues);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Failed to fetch GitHub issues' });
   }
 });
@@ -92,7 +99,7 @@ router.get('/weather', async (req, res) => {
     };
 
     res.json(weatherData);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Failed to fetch weather data' });
   }
 });
@@ -106,7 +113,7 @@ router.get('/quote', async (req, res) => {
       author: response.data.author
     };
     res.json(quote);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Failed to fetch daily quote' });
   }
 });
