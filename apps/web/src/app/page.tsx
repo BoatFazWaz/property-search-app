@@ -2,6 +2,7 @@
 
 import { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { Button } from "@repo/ui/button";
+import Link from "next/link";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST || "http://localhost:3001";
 
@@ -36,8 +37,13 @@ export default function Web() {
   };
 
   return (
-    <div>
-      <h1>Web</h1>
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Web</h1>
+        <Link href="/dashboard">
+          <Button>Go to Dashboard</Button>
+        </Link>
+      </div>
       <form onSubmit={onSubmit}>
         <label htmlFor="name">Name </label>
         <input

@@ -10,10 +10,24 @@
     "lint": "turbo run lint",
     "test": "turbo run test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "next": "^15.3.1"
+  },
   "devDependencies": {
-    "prettier": "^3.2.5",
-    "turbo": "^2.5.0"
+    "@eslint/js": "^9.25.0",
+    "eslint": "^9.25.0",
+    "eslint-config-next": "^15.3.1",
+    "eslint-plugin-react": "^7.37.5",
+    "typescript": "5.8.3",
+    "typescript-eslint": "^8.30.1",
+    "tailwindcss": "^4.1.4",
+    "prettier": "^3.5.3",
+    "turbo": "^2.5.0",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@types/node": "^22.14.1"
   },
   "engines": {
     "node": ">=14.0.0",
