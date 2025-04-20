@@ -1,148 +1,75 @@
-# Property Search Application
+# Turborepo Docker starter
 
-A full-stack property search and listing website built with modern technologies.
+This is a community-maintained example. If you experience a problem, please submit a pull request with a fix. GitHub Issues will be closed.
 
-## Tech Stack
+## Using this example
 
-### Frontend
-- Next.js (React framework with SSR/SSG)
-- TypeScript
-- Tailwind CSS
-- React Query
-- Mapbox/Google Maps API
+Run the following command:
 
-### Backend
-- Node.js with Express
-- GraphQL (Apollo)
-- MySQL database
-- Prisma ORM
-- Redis for caching
-- Elasticsearch for property search
-
-### Infrastructure
-- Docker & Docker Compose
-- CI/CD with GitHub Actions
-
-## Features
-
-- Property listing and searching
-- Advanced filtering (price, bedrooms, location, etc.)
-- User authentication
-- Property details with images
-- Map-based property visualization
-- Save favorite properties
-- Responsive design for all devices
-
-## Getting Started
-
-### Prerequisites
-
-- Docker and Docker Compose
-- Git
-
-### Installation
-
-1. Clone the repository
-```bash
-git clone <repository-url>
-cd property-search-app
+```sh
+npx create-turbo@latest -e with-docker
 ```
 
-2. Start the application with Docker Compose
-```bash
-docker-compose up
-```
+## What's inside?
 
-The application will be available at:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:4000/graphql
+This Turborepo includes the following:
 
-## Development
+### Apps and Packages
 
-### Frontend Development
+- `web`: a [Next.js](https://nextjs.org/) app
+- `api`: an [Express](https://expressjs.com/) server
+- `@repo/ui`: a React component library
+- `@repo/logger`: Isomorphic logger (a small wrapper around console.log)
+- `@repo/eslint-config`: ESLint presets
+- `@repo/typescript-config`: tsconfig.json's used throughout the monorepo
+- `@repo/jest-presets`: Jest configurations
 
-```bash
-# Enter the frontend container
-docker-compose exec frontend sh
+Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
-# Install a new package
-npm install package-name
-```
+### Docker
 
-### Backend Development
-
-```bash
-# Enter the backend container
-docker-compose exec backend sh
-
-# Run database migrations
-npx prisma migrate dev --name your_migration_name
-
-# Generate Prisma client
-npx prisma generate
-```
-
-## Project Structure
+This repo is configured to be built with Docker, and Docker compose. To build all apps in this repo:
 
 ```
-property-search-app/
-├── frontend/               # Next.js frontend application
-│   ├── src/
-│   │   ├── app/            # App router pages
-│   │   ├── components/     # Reusable React components
-│   │   └── lib/            # Utility functions and hooks
-│   ├── public/             # Static assets
-│   └── Dockerfile          # Frontend Docker configuration
-│
-├── backend/                # Express/GraphQL API
-│   ├── src/
-│   │   ├── models/         # GraphQL type definitions
-│   │   ├── resolvers/      # GraphQL resolvers
-│   │   ├── middlewares/    # Express middlewares
-│   │   └── index.ts        # Server entry point
-│   ├── prisma/             # Prisma schema and migrations
-│   └── Dockerfile          # Backend Docker configuration
-│
-└── docker-compose.yml      # Docker Compose configuration
+# Install dependencies
+yarn install
+
+# Create a network, which allows containers to communicate
+# with each other, by using their container name as a hostname
+docker network create app_network
+
+# Build prod using new BuildKit engine
+COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml build
+
+# Start prod in detached mode
+docker-compose -f docker-compose.yml up -d
 ```
 
-## Troubleshooting
+Open http://localhost:3000.
 
-### Common Issues
+To shutdown all running containers:
 
-1. **Docker build failing for backend:**
-   - Ensure all dependencies are correctly listed in package.json
-   - Try removing the node_modules volume and rebuilding: `docker-compose down -v && docker-compose up --build`
-
-2. **Database connection issues:**
-   - Check if MySQL is running: `docker-compose ps`
-   - Verify database credentials in .env match docker-compose.yml
-   - Wait for database to fully initialize (can take up to a minute)
-
-3. **TypeScript errors:**
-   - Run `docker-compose exec backend sh -c "npm install --save-dev @types/node @types/express"`
-   - Check tsconfig.json for proper configuration
-
-4. **Prisma migration errors:**
-   - Manually run migrations: `docker-compose exec backend npx prisma migrate deploy`
-   - Reset database if needed: `docker-compose exec backend npx prisma migrate reset --force`
-
-### Fixing "npm ci" errors:
-If you encounter "npm ci" errors during build:
-
-```bash
-# Rebuild with clean cache
-docker-compose build --no-cache
+```
+# Stop all running containers
+docker kill $(docker ps -q) && docker rm $(docker ps -a -q)
 ```
 
-## Contributing
+### Remote Caching
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b my-feature`
-3. Commit your changes: `git commit -am 'Add new feature'`
-4. Push to the branch: `git push origin my-feature`
-5. Submit a pull request
+> [!TIP]
+> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
 
-## License
+This example includes optional remote caching. In the Dockerfiles of the apps, uncomment the build arguments for `TURBO_TEAM` and `TURBO_TOKEN`. Then, pass these build arguments to your Docker build.
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+You can test this behavior using a command like:
+
+`docker build -f apps/web/Dockerfile . --build-arg TURBO_TEAM=“your-team-name” --build-arg TURBO_TOKEN=“your-token“ --no-cache`
+
+### Utilities
+
+This Turborepo has some additional tools already setup for you:
+
+- [TypeScript](https://www.typescriptlang.org/) for static type checking
+- [ESLint](https://eslint.org/) for code linting
+- [Jest](https://jestjs.io) test runner for all things JavaScript
+- [Prettier](https://prettier.io) for code formatting
