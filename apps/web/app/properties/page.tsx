@@ -1,16 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { PropertyListWidget } from '../components/widgets/property-list';
 import { PropertyFilterWidget } from '../components/widgets/property-filter';
 
 export default function PropertiesPage() {
-  const [filteredProperties, setFilteredProperties] = useState([]);
+  // State will be used when filter implementation is complete
+  const [_filteredProperties, _setFilteredProperties] = useState([]);
 
   const handleFilterChange = (filters: any) => {
     // TODO: Implement actual filtering logic here
     console.log('Filters changed:', filters);
-    // For now, we'll keep using the sample data from PropertyListWidget
+    // For future implementation:
+    // _setFilteredProperties(filteredResults);
   };
 
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from '@repo/ui/card';
 import { LoadingSkeleton } from './loading-skeleton';
 import type { GithubCommit } from '@repo/api/types';

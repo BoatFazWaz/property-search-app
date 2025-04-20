@@ -1,8 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from '@repo/ui/card';
-import type { DailyQuote } from '@repo/api/types';
+
+interface DailyQuote {
+  text: string;
+  author: string;
+}
 
 export function QuoteWidget() {
   const [quote, setQuote] = useState<DailyQuote | null>(null);

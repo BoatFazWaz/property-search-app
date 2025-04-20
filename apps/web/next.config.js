@@ -1,8 +1,8 @@
-const path = require("path");
+import path from "path";
 
-module.exports = {
+export default {
   reactStrictMode: true,
   transpilePackages: ["@repo/ui"],
   output: "standalone",
-  outputFileTracingRoot: path.join(__dirname, "../../"),
+  outputFileTracingRoot: path.join(process.cwd(), "../../"),
 };

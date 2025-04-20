@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { SettingsPanel } from './components/settings-panel';
 import { DraggableGrid } from './components/grid-layout';
 import { PropertyListWidget } from './components/widgets/property-list';
@@ -9,9 +9,8 @@ import { PropertyStatsWidget } from './components/widgets/property-stats';
 import { PropertyTrendsWidget } from './components/widgets/property-trends';
 import { PropertyTypeWidget } from './components/widgets/property-type';
 import { PropertyPriceWidget } from './components/widgets/property-price';
-import { useState } from 'react';
 
-export default function DashboardPage() {
+export default function DashboardPage(): React.ReactElement {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [layouts, setLayouts] = useState([
     { i: 'map', x: 0, y: 0, w: 8, h: 4, component: 

@@ -1,8 +1,9 @@
 'use client';
 
+import React from 'react';
 import { KanbanBoard } from "@repo/ui/kanban-board";
 
-export default function DashboardPage() {
+export default function DashboardPage(): React.ReactElement {
   const initialColumns = [
     {
       id: 'todo',
