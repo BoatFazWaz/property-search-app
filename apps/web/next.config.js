@@ -1,11 +1,11 @@
-import path from "path";
+const path = require("path");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@repo/ui"],
   output: "standalone",
-  outputFileTracingRoot: path.join(process.cwd(), "../../"),
+  outputFileTracingRoot: path.join(__dirname, "../../"),
   images: {
     remotePatterns: [
       {
@@ -16,4 +16,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
