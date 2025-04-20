@@ -11,11 +11,13 @@ export const metadata: Metadata = {
   description: 'Your personal developer dashboard for tracking projects, commits, and learning goals',
 };
 
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: RootLayoutProps): React.ReactElement {
   return (
     <html lang="en" className="h-full">
       <body className={`${inter.className} h-full bg-gray-50 dark:bg-gray-900`}>

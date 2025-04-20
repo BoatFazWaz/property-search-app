@@ -26,7 +26,12 @@ const MapComponent = ({ properties }: MapComponentProps) => {
   
   useEffect(() => {
     // Fix for default marker icons in react-leaflet
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
+    // We need to access a private property which requires type assertion
+    const iconDefault = L.Icon.Default.prototype as {
+      _getIconUrl?: unknown;
+    };
+    delete iconDefault._getIconUrl;
+    
     L.Icon.Default.mergeOptions({
       iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
       iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',

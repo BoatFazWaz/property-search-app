@@ -17,7 +17,7 @@ export function GitHubWidget() {
         if (!response.ok) throw new Error('Failed to fetch commits');
         const data = await response.json();
         setCommits(data);
-      } catch (err) {
+      } catch (_) {
         setError('Failed to load GitHub activity');
       } finally {
         setLoading(false);

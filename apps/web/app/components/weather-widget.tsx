@@ -28,7 +28,7 @@ export function WeatherWidget() {
       if (!response.ok) throw new Error('Failed to fetch weather');
       const data = await response.json();
       setWeather(data);
-    } catch (err) {
+    } catch (_) {
       setError('Failed to load weather data');
     } finally {
       setLoading(false);

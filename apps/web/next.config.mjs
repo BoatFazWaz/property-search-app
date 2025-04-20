@@ -1,14 +1,11 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import path from "path";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@repo/ui"],
   output: "standalone",
-  outputFileTracingRoot: path.join(__dirname, "../../"),
+  outputFileTracingRoot: path.join(process.cwd(), "../../"),
   images: {
     remotePatterns: [
       {
@@ -18,11 +15,9 @@ const nextConfig = {
     ],
   },
   eslint: {
+    // Disable ESLint during production builds for now
     ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
   },
 };
 
-export default nextConfig;
+export default nextConfig; 

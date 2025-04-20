@@ -20,7 +20,7 @@ export function QuoteWidget() {
         if (!response.ok) throw new Error('Failed to fetch quote');
         const data = await response.json();
         setQuote(data);
-      } catch (err) {
+      } catch (_) {
         setError('Failed to load daily quote');
       } finally {
         setLoading(false);
@@ -48,7 +48,7 @@ export function QuoteWidget() {
       ) : quote ? (
         <div className="space-y-3">
           <blockquote className="text-gray-900 dark:text-white italic">
-            "{quote.text}"
+            &ldquo;{quote.text}&rdquo;
           </blockquote>
           <footer className="text-sm text-gray-600 dark:text-gray-400">
             — {quote.author}

@@ -31,7 +31,7 @@ export function GitHubIssuesWidget() {
       if (!response.ok) throw new Error('Failed to fetch issues');
       const data = await response.json();
       setIssues(data);
-    } catch (err) {
+    } catch (_) {
       setError('Failed to load GitHub issues');
     } finally {
       setLoading(false);

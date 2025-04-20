@@ -29,7 +29,7 @@ export function PropertyFilterWidget({
 
   const handleFilterChange = (
     key: keyof FilterOptions,
-    value: any
+    value: string | number | { min: number; max: number }
   ) => {
     const newFilters = {
       ...filters,
