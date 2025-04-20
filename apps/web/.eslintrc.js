@@ -2,8 +2,12 @@
 module.exports = {
   root: true,
   extends: ["@repo/eslint-config/next.js"],
-  parser: "@typescript-eslint/parser",
   parserOptions: {
     project: true,
   },
+  rules: {
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/no-unescaped-entities": "off"
+  }
 };

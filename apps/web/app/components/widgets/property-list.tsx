@@ -15,8 +15,8 @@ interface Property {
 }
 
 export function PropertyListWidget() {
-  const [properties, setProperties] = useState<Property[]>([
-    // Sample data - replace with actual API call
+  // Use a fixed array of properties to avoid hydration issues
+  const [properties] = useState<Property[]>([
     {
       id: '1',
       title: 'Modern Apartment',
@@ -24,7 +24,7 @@ export function PropertyListWidget() {
       bedrooms: 2,
       bathrooms: 2,
       sqft: 1200,
-      imageUrl: '/sample-property-1.jpg',
+      imageUrl: 'https://placehold.co/600x400/png?text=Modern+Apartment',
       address: '123 Main St, City'
     },
     {
@@ -34,7 +34,7 @@ export function PropertyListWidget() {
       bedrooms: 4,
       bathrooms: 3,
       sqft: 2800,
-      imageUrl: '/sample-property-2.jpg',
+      imageUrl: 'https://placehold.co/600x400/png?text=Luxury+Villa',
       address: '456 Park Ave, City'
     }
   ]);

@@ -3,10 +3,6 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { Button } from "@repo/ui/button";
 import Link from "next/link";
-import { PropertyStatsWidget } from './components/widgets/property-stats';
-import { PropertyTrendsWidget } from './components/widgets/property-trends';
-import { PropertyTypeWidget } from './components/widgets/property-type';
-import { PropertyPriceWidget } from './components/widgets/property-price';
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST || "http://localhost:3001";
 

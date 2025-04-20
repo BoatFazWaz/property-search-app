@@ -1,17 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-
-// Fix for default marker icons in react-leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: '/marker-icon-2x.png',
-  iconUrl: '/marker-icon.png',
-  shadowUrl: '/marker-shadow.png',
-});
+import React from 'react';
+import dynamic from 'next/dynamic';
 
 interface Property {
   id: string;
@@ -23,9 +13,18 @@ interface Property {
   };
 }
 
+// Dynamic import with no SSR to prevent 'window is not defined' errors
+const MapWithNoSSR = dynamic(
+  () => import('./map-component'),
+  { 
+    ssr: false,
+    loading: () => <div className="h-full w-full flex items-center justify-center bg-gray-100 p-4 rounded min-h-[400px]">Loading map...</div>
+  }
+);
+
 export function PropertyMapWidget() {
-  const [properties, setProperties] = useState<Property[]>([
-    // Sample data - replace with actual API call
+  // Use a constant instead of state to avoid hydration mismatch
+  const properties = [
     {
       id: '1',
       title: 'Modern Apartment',
@@ -38,35 +37,11 @@ export function PropertyMapWidget() {
       price: 1200000,
       location: { lat: 51.51, lng: -0.1 }
     }
-  ]);
+  ];
 
   return (
     <div className="h-full w-full rounded-lg overflow-hidden border border-gray-200">
-      <MapContainer
-        center={[51.505, -0.09]}
-        zoom={13}
-        style={{ height: '100%', width: '100%', minHeight: '400px' }}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {properties.map((property) => (
-          <Marker
-            key={property.id}
-            position={[property.location.lat, property.location.lng]}
-          >
-            <Popup>
-              <div className="p-2">
-                <h3 className="font-semibold">{property.title}</h3>
-                <p className="text-sm text-gray-600">
-                  ${property.price.toLocaleString()}
-                </p>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
+      <MapWithNoSSR properties={properties} />
     </div>
   );
 } 
